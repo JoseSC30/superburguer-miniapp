@@ -1,43 +1,158 @@
-# Getting Started with Create React App
+# 🍔 SuperBurguer Mini App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Mini aplicación de Telegram para pedir hamburguesas desarrollada con React y Tailwind CSS.
 
-## Available Scripts
+## 🚀 Características
 
-In the project directory, you can run:
+- ✅ Integración completa con Telegram WebApp API
+- 🛒 Carrito de compras interactivo
+- 💳 Botón principal de Telegram para enviar pedidos
+- 🎨 Interfaz moderna con Tailwind CSS
+- 📱 Diseño responsive y optimizado para móviles
+- 🔄 Actualización en tiempo real del total
 
-### `npm start`
+## 🛠️ Tecnologías
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React 19
+- Tailwind CSS 3
+- Lucide React (iconos)
+- Telegram WebApp API
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 📦 Instalación
 
-### `npm test`
+```bash
+npm install
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🏃‍♂️ Desarrollo
 
-### `npm run build`
+Para ejecutar en modo desarrollo:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+La aplicación se abrirá en [http://localhost:3000](http://localhost:3000).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**Nota:** Para probar la integración completa con Telegram, necesitas desplegarla y configurarla en un bot de Telegram.
 
-### `npm run eject`
+## 🏗️ Build
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Para construir la aplicación para producción:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm run build
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🌐 Despliegue en Vercel
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Sube el proyecto a GitHub
+2. Importa el repositorio en Vercel
+3. Vercel detectará automáticamente la configuración de Create React App
+4. Copia la URL de despliegue
+
+## 🤖 Configuración del Bot de Telegram
+
+1. Crea un bot con [@BotFather](https://t.me/botfather)
+2. Usa el comando `/newapp` para crear una Mini App
+3. Proporciona la URL de tu aplicación desplegada
+4. Configura el bot para recibir los datos del pedido
+
+## 📱 Uso
+
+1. Los usuarios abren el bot en Telegram
+2. Presionan el botón "🍔 Hacer Pedido"
+3. La Mini App se abre dentro de Telegram
+4. Seleccionan hamburguesas y cantidades
+5. Presionan el botón de Telegram "Enviar Pedido"
+6. Reciben confirmación del pedido
+
+## 📚 Documentación Adicional
+
+- **[TELEGRAM_SETUP.md](./TELEGRAM_SETUP.md)** - Guía completa de configuración del bot
+- **[CHANGELOG.md](./CHANGELOG.md)** - Registro de cambios y correcciones
+- **[server-example.js](./server-example.js)** - Ejemplo de backend para el bot
+
+## 🔧 Servidor Backend (Opcional)
+
+Para procesar los pedidos, necesitas un backend. Hemos incluido un ejemplo completo:
+
+```bash
+# Instalar dependencias del servidor
+npm install --prefix . express node-telegram-bot-api cors dotenv
+
+# Configurar variables de entorno
+cp .env.server .env
+
+# Editar .env con tu token del bot
+# BOT_TOKEN=tu_token_aqui
+
+# Ejecutar servidor
+node server-example.js
+```
+
+Ver el archivo `TELEGRAM_SETUP.md` para más detalles.
+
+## 🎨 Personalización
+
+### Cambiar productos
+
+Edita el array `burgers` en `src/App.js`:
+
+```javascript
+const burgers = [
+  { id: 1, name: 'Tu Hamburguesa', price: 25, desc: 'Descripción' },
+  // Agregar más...
+];
+```
+
+### Cambiar colores
+
+Modifica los colores en `src/App.js`:
+
+```javascript
+if (tg.setHeaderColor) {
+  tg.setHeaderColor('#tu-color'); // Color del header
+}
+```
+
+O edita las clases de Tailwind en el JSX.
+
+## 🐛 Solución de Problemas
+
+### La app no compila
+```bash
+rm -rf node_modules package-lock.json
+npm install
+npm run build
+```
+
+### Tailwind CSS no funciona
+Verifica que `src/index.css` contenga:
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+### El botón de Telegram no aparece
+- Verifica que la app esté desplegada en HTTPS
+- Revisa los headers en `vercel.json`
+- Asegúrate de haber configurado correctamente el bot
+
+## 📄 Licencia
+
+Este proyecto es de código abierto y está disponible bajo la licencia MIT.
+
+## 👨‍💻 Autor
+
+Proyecto desarrollado para demostración de Telegram Mini Apps.
+
+## 🙏 Agradecimientos
+
+- Telegram por la API de Mini Apps
+- React y Tailwind CSS por las herramientas
+- Lucide React por los iconos
 
 ## Learn More
 

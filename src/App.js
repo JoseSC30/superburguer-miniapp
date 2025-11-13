@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ShoppingCart, Plus, Minus, Send } from 'lucide-react';
 
-// Simulación de la API de Telegram
-const tg = (typeof window !== 'undefined' && window.Telegram?.WebApp) || {
+// Obtener la API de Telegram WebApp
+const tg = window.Telegram?.WebApp || {
   initData: '',
   initDataUnsafe: { user: { id: 123, first_name: 'Demo' } },
   MainButton: {
@@ -17,7 +17,13 @@ const tg = (typeof window !== 'undefined' && window.Telegram?.WebApp) || {
   },
   close: () => console.log('App closed'),
   ready: () => console.log('App ready'),
-  expand: () => console.log('App expanded')
+  expand: () => console.log('App expanded'),
+  BackButton: {
+    show: () => console.log('BackButton shown'),
+    hide: () => console.log('BackButton hidden'),
+    onClick: (fn) => console.log('BackButton onClick'),
+    offClick: (fn) => console.log('BackButton offClick')
+  }
 };
 
 const burgers = [
@@ -31,10 +37,19 @@ export default function SuperBurguerApp() {
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
   const [orderSent, setOrderSent] = useState(false);
+  const mainButtonHandlerRef = useRef(null);
 
   useEffect(() => {
     tg.ready();
     tg.expand();
+    
+    // Configurar colores del tema
+    if (tg.setHeaderColor) {
+      tg.setHeaderColor('#fb923c'); // orange-400
+    }
+    if (tg.setBackgroundColor) {
+      tg.setBackgroundColor('#fb923c');
+    }
   }, []);
 
   const getTotal = useCallback(() => {
@@ -42,35 +57,60 @@ export default function SuperBurguerApp() {
   }, [cart]);
 
   const handleSendOrder = useCallback(() => {
+    if (cart.length === 0) return;
+    
     const orderData = {
-      user_id: tg.initDataUnsafe?.user?.id,
-      user_name: tg.initDataUnsafe?.user?.first_name,
-      items: cart,
+      user_id: tg.initDataUnsafe?.user?.id || 'demo_user',
+      user_name: tg.initDataUnsafe?.user?.first_name || 'Usuario Demo',
+      items: cart.map(item => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price
+      })),
       total: getTotal(),
       timestamp: new Date().toISOString()
     };
 
-    // En producción, aquí enviarías los datos a tu backend
-    console.log('Pedido enviado:', orderData);
-    
-    // Simular envío
-    setOrderSent(true);
-    setTimeout(() => {
-      tg.close();
-    }, 2000);
+    // Enviar datos al bot de Telegram
+    if (tg.sendData) {
+      try {
+        tg.sendData(JSON.stringify(orderData));
+      } catch (error) {
+        console.error('Error al enviar datos:', error);
+      }
+    } else {
+      // Modo demo: solo mostrar en consola
+      console.log('Pedido enviado:', orderData);
+      setOrderSent(true);
+      setTimeout(() => {
+        tg.close();
+      }, 2000);
+    }
   }, [cart, getTotal]);
 
   useEffect(() => {
+    // Limpiar el handler anterior si existe
+    if (mainButtonHandlerRef.current) {
+      tg.MainButton.offClick(mainButtonHandlerRef.current);
+    }
+
     if (cart.length > 0) {
+      // Guardar referencia al nuevo handler
+      mainButtonHandlerRef.current = handleSendOrder;
+      
       tg.MainButton.text = `Enviar Pedido (Bs. ${getTotal()})`;
       tg.MainButton.show();
       tg.MainButton.onClick(handleSendOrder);
     } else {
       tg.MainButton.hide();
+      mainButtonHandlerRef.current = null;
     }
 
     return () => {
-      tg.MainButton.offClick(handleSendOrder);
+      if (mainButtonHandlerRef.current) {
+        tg.MainButton.offClick(mainButtonHandlerRef.current);
+      }
     };
   }, [cart, getTotal, handleSendOrder]);
 
@@ -89,6 +129,8 @@ export default function SuperBurguerApp() {
 
   const removeFromCart = (burgerId) => {
     const existing = cart.find(item => item.id === burgerId);
+    if (!existing) return;
+    
     if (existing.quantity > 1) {
       setCart(cart.map(item =>
         item.id === burgerId
