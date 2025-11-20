@@ -38,7 +38,7 @@ export const getProducts = async () => {
 
 // Obtener usuario por Telegram ID
 export const getUserByTelegramId = async (telegramId) => {
-  return await fetchAPI(`/telegram/${telegramId}`);
+  return await fetchAPI(`/users/telegram/${telegramId}`);
 };
 
 // Crear una nueva orden
