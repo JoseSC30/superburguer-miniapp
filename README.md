@@ -1,6 +1,6 @@
-# 🍔 SuperBurguer Mini App
+# 🍔 SuperSuperBurguer Mini App
 
-Mini aplicación de Telegram para pedir hamburguesas desarrollada con React y Tailwind CSS.
+Mini aplicación de Telegram para pedir hamburguesas del local "SuperSuperBurguer", desarrollada con React y Tailwind CSS.
 
 ## 🚀 Características
 
@@ -10,6 +10,9 @@ Mini aplicación de Telegram para pedir hamburguesas desarrollada con React y Ta
 - 🎨 Interfaz moderna con Tailwind CSS
 - 📱 Diseño responsive y optimizado para móviles
 - 🔄 Actualización en tiempo real del total
+- 🔌 Conexión con backend NestJS
+- 📦 Carga dinámica de productos desde el servidor
+- 👤 Identificación automática de usuarios por Telegram ID
 
 ## 🛠️ Tecnologías
 
