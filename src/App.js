@@ -61,7 +61,7 @@ export default function SuperBurguerApp() {
       setError(null);
 
       // Obtener Telegram ID
-      const telegramId = tg.initDataUnsafe?.user?.id?.toString() || '123';
+      const telegramId = tg.initDataUnsafe?.user?.id?.toString() || '5869516446';
       console.log('Telegram ID:', telegramId);
 
       // Cargar productos y usuario en paralelo
@@ -78,8 +78,19 @@ export default function SuperBurguerApp() {
       setProducts(activeProducts);
 
       // Guardar el ID del usuario del backend
-      if (userData && userData.length > 0) {
-        setBackendUserId(userData[0].id);
+      // El backend puede devolver un objeto directamente o un array
+      if (userData) {
+        if (Array.isArray(userData) && userData.length > 0) {
+          // Si es un array, tomar el primer elemento
+          setBackendUserId(userData[0].id);
+          console.log('Usuario ID (array):', userData[0].id);
+        } else if (userData.id) {
+          // Si es un objeto directo, tomar su id
+          setBackendUserId(userData.id);
+          console.log('Usuario ID (objeto):', userData.id);
+        } else {
+          setError('Usuario no encontrado en el sistema');
+        }
       } else {
         setError('Usuario no encontrado en el sistema');
       }
