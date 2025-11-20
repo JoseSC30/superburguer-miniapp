@@ -42,7 +42,7 @@ export default function SuperBurguerApp() {
   useEffect(() => {
     tg.ready();
     tg.expand();
-    
+
     // Configurar colores del tema
     if (tg.setHeaderColor) {
       tg.setHeaderColor('#fb923c'); // orange-400
@@ -109,10 +109,10 @@ export default function SuperBurguerApp() {
 
   const handleSendOrder = useCallback(async () => {
     if (cart.length === 0 || !backendUserId || sendingOrder) return;
-    
+
     try {
       setSendingOrder(true);
-      
+
       // Preparar datos de la orden según el formato del backend
       const orderData = {
         userId: backendUserId,
@@ -128,9 +128,12 @@ export default function SuperBurguerApp() {
       const response = await createOrder(orderData);
       console.log('Orden creada:', response);
 
+      // Llamar a la funcion getOrderById.
+      await getOrderById(response.id);
+
       // Mostrar mensaje de éxito
       setOrderSent(true);
-      
+
       // Cerrar la app después de 2 segundos
       setTimeout(() => {
         tg.close();
@@ -152,7 +155,7 @@ export default function SuperBurguerApp() {
     if (cart.length > 0) {
       // Guardar referencia al nuevo handler
       mainButtonHandlerRef.current = handleSendOrder;
-      
+
       tg.MainButton.text = `Enviar Pedido (Bs. ${getTotal()})`;
       tg.MainButton.show();
       tg.MainButton.onClick(handleSendOrder);
@@ -171,8 +174,8 @@ export default function SuperBurguerApp() {
   const addToCart = (product) => {
     const existing = cart.find(item => item.id === product.id);
     if (existing) {
-      setCart(cart.map(item => 
-        item.id === product.id 
+      setCart(cart.map(item =>
+        item.id === product.id
           ? { ...item, quantity: item.quantity + 1 }
           : item
       ));
@@ -184,7 +187,7 @@ export default function SuperBurguerApp() {
   const removeFromCart = (productId) => {
     const existing = cart.find(item => item.id === productId);
     if (!existing) return;
-    
+
     if (existing.quantity > 1) {
       setCart(cart.map(item =>
         item.id === productId
@@ -296,8 +299,8 @@ export default function SuperBurguerApp() {
                 <div key={product.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition">
                   {product.imageUrl ? (
                     <div className="h-48 overflow-hidden">
-                      <img 
-                        src={product.imageUrl} 
+                      <img
+                        src={product.imageUrl}
                         alt={product.name}
                         className="w-full h-full object-cover"
                         onError={(e) => {
