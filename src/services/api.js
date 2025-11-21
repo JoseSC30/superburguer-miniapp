@@ -49,7 +49,15 @@ export const createOrder = async (orderData) => {
     });
 };
 
-// Ruta GET para obtener una orden por ID
+// Obtener una orden por ID
 export const getOrderById = async (orderId) => {
     return await fetchAPI(`/orders/${orderId}`);
+};
+
+// Actualizar estado de una orden a CONFIRMED
+export const confirmOrder = async (orderId) => {
+    return await fetchAPI(`/orders/${orderId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status: 'CONFIRMED' }),
+    });
 };
