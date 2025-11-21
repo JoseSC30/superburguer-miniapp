@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ShoppingCart, Plus, Minus } from 'lucide-react';
-import { getProducts, getUserByTelegramId } from '../services/api';
+import { createOrder, getProducts, getUserByTelegramId } from '../services/api';
 import { tg, initTelegramApp, getTelegramUserId } from '../utils/telegram';
 import LoadingScreen from '../components/LoadingScreen';
 import ErrorScreen from '../components/ErrorScreen';
@@ -75,7 +75,14 @@ export default function MenuPage() {
             total: getTotal()
         });
 
-        alert(`Pedido listo:\n\nTotal: Bs. ${getTotal().toFixed(2)}\n\nEste pedido se enviará cuando el backend lo solicite a través de la ruta /pagoqr`);
+        // alert(`Pedido listo:\n\nTotal: Bs. ${getTotal().toFixed(2)}\n\nEste pedido se enviará cuando el backend lo solicite a través de la ruta /pagoqr`);
+        // La funcion de abajo envia la orden al backend para que quede registrada y pueda ser consultada luego en /pagoqr.
+        createOrder({
+            userId: backendUserId,
+            items: cart,
+            total: getTotal()
+        });
+
     }, [cart, backendUserId, getTotal]);
 
     useEffect(() => {
