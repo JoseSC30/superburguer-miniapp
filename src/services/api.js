@@ -70,6 +70,6 @@ export const confirmOrder = async (orderId) => {
 // Llamado al endpoint para el mensaje de pedido confirmado. Se le pasa el parametro orderId y el telegramId
 // Esta es la ruta declarada en el backend para enviar el mensaje al usuario: @Get('response-after-payqr/:chatId/:orderId')
 export const sendOrderConfirmedMessage = async (telegramId, orderId) => {
-    return await fetchAPI(`/orders/response-after-payqr/${telegramId}/${orderId}`);
+    return await fetchAPI(`/telegram/response-after-payqr/${telegramId}/${orderId}`);
 };
 
