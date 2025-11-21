@@ -49,17 +49,15 @@ export const createOrder = async (orderData) => {
     });
 };
 
-// Obtener una orden por ID
+// Obtener una orden por ID - Obtiene la orden y envia un mensaje consultado si quiere pagar o cancelar.
 export const getOrderById = async (orderId) => {
     return await fetchAPI(`/orders/${orderId}`);
 };
 
-// Obtener una orden por ID - Version 02
+// Obtener una orden por ID - Version 02 -Solo obtiene la orden como debe ser
 export const getOrderByIdV02 = async (orderId) => {
     return await fetchAPI(`/orders/v02/${orderId}`);
 };
-
-
 
 // Actualizar estado de una orden a CONFIRMED
 export const confirmOrder = async (orderId) => {
@@ -68,3 +66,10 @@ export const confirmOrder = async (orderId) => {
         body: JSON.stringify({ status: 'CONFIRMADO' }),
     });
 };
+
+// Llamado al endpoint para el mensaje de pedido confirmado. Se le pasa el parametro orderId y el telegramId
+// Esta es la ruta declarada en el backend para enviar el mensaje al usuario: @Get('response-after-payqr/:chatId/:orderId')
+export const sendOrderConfirmedMessage = async (telegramId, orderId) => {
+    return await fetchAPI(`/orders/response-after-payqr/${telegramId}/${orderId}`);
+};
+

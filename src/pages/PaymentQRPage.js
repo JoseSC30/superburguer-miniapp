@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { QrCode, CheckCircle, Loader } from 'lucide-react';
-import { getOrderByIdV02, confirmOrder } from '../services/api';
+import { getOrderByIdV02, confirmOrder, sendOrderConfirmedMessage } from '../services/api';
 import { tg, initTelegramApp } from '../utils/telegram';
 import LoadingScreen from '../components/LoadingScreen';
 import ErrorScreen from '../components/ErrorScreen';
@@ -56,6 +56,12 @@ export default function PaymentQRPage() {
 
             setPaymentConfirmed(true);
             setConfirmingPayment(false);
+
+            //
+            //await sendOrderConfirmedMessage(tg.initDataUnsafe.user.id, order.id);
+            await sendOrderConfirmedMessage(order.userId, order.id);
+            console.log('Mensaje de confirmación enviado al usuario');
+            //
 
             setTimeout(() => {
                 tg.close();
