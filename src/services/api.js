@@ -1,6 +1,6 @@
 // Servicio para consumir el backend de SuperSuperBurguer
 
-const API_BASE_URL = 'https://ca42b3df0b6f.ngrok-free.app';
+const API_BASE_URL = 'https://75d4553aebe9.ngrok-free.app';
 
 // Función auxiliar para hacer peticiones
 const fetchAPI = async (endpoint, options = {}) => {
