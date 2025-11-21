@@ -52,13 +52,18 @@ export default function PaymentQRPage() {
 
             await confirmOrder(order.id);
 
+            console.log('USURARIO TELEGRAM ID:', tg.initDataUnsafe.user.id);
+            console.log('ORDER ID:', order.id);
+            console.log('Llamando a sendOrderConfirmedMessage...');
             console.log('Pago confirmado exitosamente');
+            
+            await sendOrderConfirmedMessage(tg.initDataUnsafe.user.id, order.id);
 
             setPaymentConfirmed(true);
             setConfirmingPayment(false);
 
             //
-            await sendOrderConfirmedMessage(tg.initDataUnsafe.user.id, order.id);
+            
             //await sendOrderConfirmedMessage(order.userId, order.id);
             console.log('Mensaje de confirmación enviado al usuario');
             //
