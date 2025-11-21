@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { QrCode, CheckCircle, Loader } from 'lucide-react';
-import { getOrderById, confirmOrder } from '../services/api';
+import { getOrderByIdV02, confirmOrder } from '../services/api';
 import { tg, initTelegramApp } from '../utils/telegram';
 import LoadingScreen from '../components/LoadingScreen';
 import ErrorScreen from '../components/ErrorScreen';
@@ -31,7 +31,7 @@ export default function PaymentQRPage() {
     const loadOrder = async (orderId) => {
         try {
             setLoading(true);
-            const orderData = await getOrderById(orderId);
+            const orderData = await getOrderByIdV02(orderId);
             console.log('Orden cargada:', orderData);
             setOrder(orderData);
             setLoading(false);

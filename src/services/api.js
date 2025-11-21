@@ -54,6 +54,11 @@ export const getOrderById = async (orderId) => {
     return await fetchAPI(`/orders/${orderId}`);
 };
 
+// Obtener una orden por ID - Version 02
+export const getOrderByIdV02 = async (orderId) => {
+    return await fetchAPI(`/orders/v02/${orderId}`);
+};
+
 
 
 // Actualizar estado de una orden a CONFIRMED
