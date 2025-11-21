@@ -58,8 +58,8 @@ export default function PaymentQRPage() {
             setConfirmingPayment(false);
 
             //
-            //await sendOrderConfirmedMessage(tg.initDataUnsafe.user.id, order.id);
-            await sendOrderConfirmedMessage(order.userId, order.id);
+            await sendOrderConfirmedMessage(tg.initDataUnsafe.user.id, order.id);
+            //await sendOrderConfirmedMessage(order.userId, order.id);
             console.log('Mensaje de confirmación enviado al usuario');
             //
 
