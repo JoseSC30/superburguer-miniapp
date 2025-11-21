@@ -13,6 +13,7 @@ export default function MenuPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [backendUserId, setBackendUserId] = useState(null);
+    const [sendingOrder, setSendingOrder] = useState(false);
     const mainButtonHandlerRef = useRef(null);
 
     useEffect(() => {
@@ -65,37 +66,48 @@ export default function MenuPage() {
         return cart.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
     }, [cart]);
 
-    const handleShowOrderSummary = useCallback(() => {
-        if (cart.length === 0) return;
+    const handleSendOrder = useCallback(async () => {
+        if (cart.length === 0 || !backendUserId || sendingOrder) return;
 
-        // Solo mostrar resumen de la orden
-        console.log('Resumen del pedido:', {
-            userId: backendUserId,
-            items: cart,
-            total: getTotal()
-        });
+        try {
+            setSendingOrder(true);
 
-        // alert(`Pedido listo:\n\nTotal: Bs. ${getTotal().toFixed(2)}\n\nEste pedido se enviará cuando el backend lo solicite a través de la ruta /pagoqr`);
-        // La funcion de abajo envia la orden al backend para que quede registrada y pueda ser consultada luego en /pagoqr.
-        createOrder({
-            userId: backendUserId,
-            items: cart,
-            total: getTotal()
-        });
+            const orderData = {
+                userId: backendUserId,
+                items: cart.map(item => ({
+                    productId: item.id,
+                    quantity: item.quantity
+                }))
+            };
 
-    }, [cart, backendUserId, getTotal]);
+            console.log('Enviando orden:', orderData);
+
+            const response = await createOrder(orderData);
+            console.log('Orden creada:', response);
+
+            // Cerrar la app después de enviar la orden
+            setTimeout(() => {
+                tg.close();
+            }, 500);
+
+        } catch (error) {
+            console.error('Error al enviar orden:', error);
+            setError('Error al enviar el pedido. Intenta nuevamente.');
+            setSendingOrder(false);
+        }
+    }, [cart, backendUserId, sendingOrder]);
 
     useEffect(() => {
         if (mainButtonHandlerRef.current) {
             tg.MainButton.offClick(mainButtonHandlerRef.current);
         }
 
-        if (cart.length > 0) {
-            mainButtonHandlerRef.current = handleShowOrderSummary;
+        if (cart.length > 0 && !sendingOrder) {
+            mainButtonHandlerRef.current = handleSendOrder;
 
-            tg.MainButton.text = `Ver Resumen (Bs. ${getTotal().toFixed(2)})`;
+            tg.MainButton.text = `Enviar Pedido (Bs. ${getTotal().toFixed(2)})`;
             tg.MainButton.show();
-            tg.MainButton.onClick(handleShowOrderSummary);
+            tg.MainButton.onClick(handleSendOrder);
         } else {
             tg.MainButton.hide();
             mainButtonHandlerRef.current = null;
@@ -106,7 +118,7 @@ export default function MenuPage() {
                 tg.MainButton.offClick(mainButtonHandlerRef.current);
             }
         };
-    }, [cart, getTotal, handleShowOrderSummary]);
+    }, [cart, getTotal, handleSendOrder, sendingOrder]);
 
     const addToCart = (product) => {
         const existing = cart.find(item => item.id === product.id);
